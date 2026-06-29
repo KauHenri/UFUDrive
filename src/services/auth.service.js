@@ -14,8 +14,13 @@ export const AuthService = {
    */
   initialize() {
     return new Promise((resolve, reject) => {
+      const deadline = Date.now() + 10_000 // timeout de 10s
       const tryInit = () => {
         if (!window.google?.accounts?.oauth2) {
+          if (Date.now() > deadline) {
+            reject(new Error('Não foi possível carregar o Google Identity Services. Verifique sua conexão e recarregue a página.'))
+            return
+          }
           setTimeout(tryInit, 100)
           return
         }
