@@ -38,7 +38,7 @@ jobs:
         run: npm run build
         env:
           VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
-          VITE_APP_BASE_PATH: /ufudrive
+          VITE_APP_BASE_PATH: /UFUDrive
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
