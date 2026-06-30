@@ -1,4 +1,5 @@
 // src/App.jsx
+import { lazy, Suspense } from 'react'
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ErrorBoundary } from '@/components/shared/ErrorBoundary'
 import { ProtectedRoute } from '@/components/shared/ProtectedRoute'
@@ -15,6 +16,11 @@ import { ModulePlaceholder } from '@/modules/ModulePlaceholder'
 import { EditSubjectPage } from '@/pages/EditSubjectPage'
 import { NotesEditor } from '@/modules/notes/NotesEditor'
 import { MediaViewer } from '@/modules/media/MediaViewer'
+import { FlashcardsModule } from '@/modules/flashcards/FlashcardsModule'
+const CodeEditorModule = lazy(() =>
+  import('@/modules/code-editor/CodeEditorModule').then((m) => ({ default: m.CodeEditorModule }))
+)
+
 
 export default function App() {
   return (
@@ -43,26 +49,13 @@ export default function App() {
               <Route path="media" element={<MediaViewer />} />
               <Route path="grades" element={<GradeCalculator />} />
               <Route path="kanban" element={<KanbanBoard />} />
-              <Route
-                path="flashcards"
-                element={
-                  <ModulePlaceholder
-                    icon="🃏"
-                    title="Flashcards"
-                    description="Revisão com repetição espaçada usando o algoritmo SM-2."
-                    sprint="Sprint 4"
-                  />
-                }
-              />
+              <Route path="flashcards" element={<FlashcardsModule />} />
               <Route
                 path="code"
                 element={
-                  <ModulePlaceholder
-                    icon="💻"
-                    title="Editor de Código"
-                    description="Monaco Editor com suporte a Python, JavaScript, Verilog e mais."
-                    sprint="Sprint 4"
-                  />
+                  <Suspense fallback={<div className="flex-1 flex items-center justify-center"><div className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>}>
+                    <CodeEditorModule />
+                  </Suspense>
                 }
               />
               <Route

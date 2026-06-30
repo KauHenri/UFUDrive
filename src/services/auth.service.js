@@ -7,6 +7,8 @@ let _tokenExpiry = null
 let _tokenClient = null
 let _userInfo = null
 
+let _currentReject = null
+
 export const AuthService = {
   /**
    * Inicializa o cliente GIS (Google Identity Services).
@@ -29,6 +31,12 @@ export const AuthService = {
             client_id: GOOGLE_CONFIG.clientId,
             scope: GOOGLE_CONFIG.scopes,
             callback: () => {}, // substituído em requestToken()
+            error_callback: (err) => {
+              if (_currentReject) {
+                _currentReject(new Error(err.type || 'Erro na autenticação (popup bloqueado)'))
+                _currentReject = null
+              }
+            }
           })
           resolve()
         } catch (err) {
@@ -50,7 +58,10 @@ export const AuthService = {
         return
       }
 
+      _currentReject = reject
+
       _tokenClient.callback = (response) => {
+        _currentReject = null
         if (response.error) {
           reject(new Error(`OAuth error: ${response.error} — ${response.error_description || ''}`))
           return
