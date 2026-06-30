@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { useAuthStore } from '@/store/auth.store'
 import { useConfigStore } from '@/store/config.store'
 import { calcCurrentGrade, gradeColor } from '@/utils/gradeUtils'
+import { DeadlineWidget } from '@/modules/dashboard/DeadlineWidget'
 
 const MODULE_TAB_MAP = [
   { key: 'notes',           path: 'notes'      },
@@ -168,6 +169,8 @@ export function DashboardPage() {
           </div>
         ))}
       </div>
+
+      <DeadlineWidget />
 
       {/* ── Disciplinas ───────────────────────────────────────────────── */}
       <div className="mb-6">

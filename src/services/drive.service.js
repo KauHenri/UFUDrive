@@ -163,11 +163,12 @@ export const DriveService = {
 
   /**
    * Busca o config.json na pasta raiz do app.
+   * Também busca 'data.json' como fallback (bug anterior renomeava o arquivo).
    */
   async findConfigFile(appFolderId) {
-    const query = `'${appFolderId}' in parents and name='${APP.configFileName}' and trashed=false`
+    const query = `'${appFolderId}' in parents and (name='${APP.configFileName}' or name='data.json') and trashed=false`
     const res = await apiFetch(
-      `/files?q=${encodeURIComponent(query)}&fields=files(id,name,modifiedTime)`
+      `/files?q=${encodeURIComponent(query)}&fields=files(id,name,modifiedTime)&orderBy=modifiedTime desc`
     )
     return res.files?.[0] || null
   },

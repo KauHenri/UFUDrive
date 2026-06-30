@@ -82,7 +82,7 @@ export const ConfigService = {
         lastModified: new Date().toISOString(),
       },
     }
-    await DriveService.saveJSON(updated, { fileId: configFileId })
+    await DriveService.saveJSON(updated, { fileId: configFileId, fileName: APP.configFileName })
     return updated
   },
 }

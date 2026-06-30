@@ -10,7 +10,7 @@ import { NewSubjectPage } from '@/pages/NewSubjectPage'
 import { SettingsPage } from '@/pages/SettingsPage'
 import { SubjectPage } from '@/pages/SubjectPage'
 import { GradeCalculator } from '@/modules/grade-calculator/GradeCalculator'
-import { KanbanShell } from '@/modules/kanban/KanbanShell'
+import { KanbanBoard } from '@/modules/kanban/KanbanBoard'
 import { ModulePlaceholder } from '@/modules/ModulePlaceholder'
 
 export default function App() {
@@ -58,7 +58,7 @@ export default function App() {
                 }
               />
               <Route path="grades" element={<GradeCalculator />} />
-              <Route path="kanban" element={<KanbanShell />} />
+              <Route path="kanban" element={<KanbanBoard />} />
               <Route
                 path="flashcards"
                 element={
