@@ -1,6 +1,7 @@
 // src/store/config.store.js
 import { create } from 'zustand'
 import { ConfigService } from '@/services/config.service'
+import { toast } from '@/components/shared/Toast'
 
 export const useConfigStore = create((set, get) => ({
   // Estado
@@ -24,6 +25,7 @@ export const useConfigStore = create((set, get) => ({
       set({ config: updated, saving: false, lastSaved: new Date() })
     } catch (err) {
       set({ saving: false })
+      toast(`Erro ao salvar: ${err.message}`, 'error')
       throw err
     }
   },

@@ -17,6 +17,7 @@ import { EditSubjectPage } from '@/pages/EditSubjectPage'
 import { NotesEditor } from '@/modules/notes/NotesEditor'
 import { MediaViewer } from '@/modules/media/MediaViewer'
 import { FlashcardsModule } from '@/modules/flashcards/FlashcardsModule'
+import { ExternalFrame } from '@/modules/external/ExternalFrame'
 const CodeEditorModule = lazy(() =>
   import('@/modules/code-editor/CodeEditorModule').then((m) => ({ default: m.CodeEditorModule }))
 )
@@ -58,17 +59,7 @@ export default function App() {
                   </Suspense>
                 }
               />
-              <Route
-                path="external"
-                element={
-                  <ModulePlaceholder
-                    icon="🌐"
-                    title="Janela Externa"
-                    description="Abra qualquer URL em um iFrame seguro dentro da disciplina."
-                    sprint="Sprint 5"
-                  />
-                }
-              />
+              <Route path="external" element={<ExternalFrame />} />
             </Route>
           </Route>
           <Route path="*" element={<Navigate to="/login" replace />} />
