@@ -57,6 +57,14 @@ export const useConfigStore = create((set, get) => ({
     await get().saveConfig()
   },
 
+  // Remove uma disciplina pelo id
+  removeSubject: async (subjectId) => {
+    const { config } = get()
+    const subjects = config.subjects.filter((s) => s.id !== subjectId)
+    set({ config: { ...config, subjects } })
+    await get().saveConfig()
+  },
+
   reset: () =>
     set({ config: null, configFileId: null, appFolderId: null, saving: false, lastSaved: null }),
 }))

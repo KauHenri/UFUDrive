@@ -1,6 +1,6 @@
 // src/pages/SubjectPage.jsx
 import { useMemo } from 'react'
-import { useParams, NavLink, Outlet, Navigate, useLocation } from 'react-router-dom'
+import { useParams, NavLink, Outlet, Navigate, useLocation, Link } from 'react-router-dom'
 import { useConfigStore } from '@/store/config.store'
 
 const MODULE_TABS = [
@@ -64,6 +64,12 @@ export function SubjectPage() {
                   {subject.code}
                 </span>
               )}
+              <Link
+                to={`/app/subjects/${subject.id}/edit`}
+                className="ml-auto text-slate-600 hover:text-slate-300 transition-colors text-xs flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-slate-800"
+              >
+                ✏️ Editar
+              </Link>
             </div>
             <p className="text-slate-500 text-sm mt-0.5">
               {subject.professor || 'Professor não definido'}

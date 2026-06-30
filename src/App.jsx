@@ -12,6 +12,9 @@ import { SubjectPage } from '@/pages/SubjectPage'
 import { GradeCalculator } from '@/modules/grade-calculator/GradeCalculator'
 import { KanbanBoard } from '@/modules/kanban/KanbanBoard'
 import { ModulePlaceholder } from '@/modules/ModulePlaceholder'
+import { EditSubjectPage } from '@/pages/EditSubjectPage'
+import { NotesEditor } from '@/modules/notes/NotesEditor'
+import { MediaViewer } from '@/modules/media/MediaViewer'
 
 export default function App() {
   return (
@@ -32,31 +35,12 @@ export default function App() {
             <Route path="subjects" element={<SubjectsPage />} />
             <Route path="subjects/new" element={<NewSubjectPage />} />
             <Route path="settings" element={<SettingsPage />} />
+            <Route path="subjects/:id/edit" element={<EditSubjectPage />} />
 
             {/* ── Disciplina com abas ──────────────────────────────── */}
             <Route path="subjects/:id" element={<SubjectPage />}>
-              <Route
-                path="notes"
-                element={
-                  <ModulePlaceholder
-                    icon="📝"
-                    title="Editor de Anotações"
-                    description="Editor Markdown + LaTeX com sincronização automática no Drive."
-                    sprint="Sprint 3"
-                  />
-                }
-              />
-              <Route
-                path="media"
-                element={
-                  <ModulePlaceholder
-                    icon="📄"
-                    title="Visualizador de Slides"
-                    description="Visualize PDFs e imagens diretamente do Drive sem precisar baixar."
-                    sprint="Sprint 3"
-                  />
-                }
-              />
+              <Route path="notes" element={<NotesEditor />} />
+              <Route path="media" element={<MediaViewer />} />
               <Route path="grades" element={<GradeCalculator />} />
               <Route path="kanban" element={<KanbanBoard />} />
               <Route
