@@ -1,11 +1,16 @@
 // src/pages/LoginPage.jsx
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/store/auth.store'
 
 export function LoginPage() {
-  const { signIn, status, error, clearError } = useAuthStore()
+  const { signIn, attemptSilentLogin, status, error, clearError } = useAuthStore()
+  const [keepLoggedIn, setKeepLoggedIn] = useState(true)
   const navigate = useNavigate()
+
+  useEffect(() => {
+    attemptSilentLogin()
+  }, [attemptSilentLogin])
 
   useEffect(() => {
     if (status === 'authenticated') navigate('/app/dashboard', { replace: true })
@@ -13,7 +18,7 @@ export function LoginPage() {
 
   const handleSignIn = async () => {
     clearError()
-    await signIn()
+    await signIn(keepLoggedIn)
   }
 
   const isLoading = status === 'loading'
@@ -133,6 +138,16 @@ export function LoginPage() {
               </>
             )}
           </button>
+
+          <label className="flex items-center gap-2 mt-4 cursor-pointer text-slate-400 text-sm w-fit mx-auto">
+            <input
+              type="checkbox"
+              checked={keepLoggedIn}
+              onChange={(e) => setKeepLoggedIn(e.target.checked)}
+              className="w-4 h-4 rounded bg-slate-800 border-slate-700 text-indigo-500 focus:ring-indigo-500/20"
+            />
+            Mantenha-me conectado
+          </label>
 
           <p className="mt-6 text-center text-slate-600 text-xs leading-relaxed">
             O sistema solicita acesso{' '}

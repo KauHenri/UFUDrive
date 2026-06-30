@@ -124,6 +124,33 @@ export const DriveService = {
   },
 
   /**
+   * Faz upload de um arquivo genérico para uma pasta.
+   */
+  async uploadMediaFile(file, parentId) {
+    const meta = {
+      name: file.name,
+      mimeType: file.type || 'application/octet-stream',
+      parents: [parentId],
+    }
+    const form = new FormData()
+    form.append('metadata', new Blob([JSON.stringify(meta)], { type: 'application/json' }))
+    form.append('file', file)
+
+    const token = await AuthService.ensureToken()
+    const res = await fetch(`${DRIVE_API.uploadUrl}/files?uploadType=multipart`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: form,
+    })
+
+    if (!res.ok) {
+      const body = await res.json()
+      throw new Error(body.error?.message || `Upload falhou: ${res.status}`)
+    }
+    return res.json()
+  },
+
+  /**
    * Salva um arquivo JSON no Drive.
    * Se fileId for fornecido, atualiza (PATCH). Caso contrário, cria (POST).
    */

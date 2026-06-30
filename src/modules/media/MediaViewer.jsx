@@ -1,5 +1,5 @@
 // src/modules/media/MediaViewer.jsx
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import { DriveService } from '@/services/drive.service'
 
@@ -31,18 +31,19 @@ export function MediaViewer() {
   const [selectedFile, setSelectedFile] = useState(null)
   const [mediaUrl, setMediaUrl] = useState(null)
   const [loadingMedia, setLoadingMedia] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
+
+  const fileInputRef = useRef(null)
 
   const folderId = activeFolder === 'slides' ? slidesFolderId : assignmentsFolderId
 
-  // Carrega lista ao trocar pasta
-  useEffect(() => {
+  const loadFiles = () => {
     if (!folderId) { setFiles([]); return }
     setLoading(true)
     setSelectedFile(null)
     setMediaUrl(null)
     DriveService.listFiles(folderId)
       .then((f) => {
-        // Filtra apenas visualizáveis
         const viewable = f.filter(
           (file) => file.mimeType === PDF_MIME || IMAGE_MIMES.includes(file.mimeType)
         )
@@ -50,7 +51,30 @@ export function MediaViewer() {
       })
       .catch(() => setFiles([]))
       .finally(() => setLoading(false))
+  }
+
+  // Carrega lista ao trocar pasta
+  useEffect(() => {
+    loadFiles()
   }, [folderId])
+
+  const handleUpload = async (e) => {
+    const selected = e.target.files
+    if (!selected || selected.length === 0 || !folderId) return
+
+    setIsUploading(true)
+    try {
+      for (const file of selected) {
+        await DriveService.uploadMediaFile(file, folderId)
+      }
+      loadFiles() // Recarrega a lista após o upload
+    } catch (err) {
+      alert(err.message || 'Erro ao enviar arquivo.')
+    } finally {
+      setIsUploading(false)
+      if (fileInputRef.current) fileInputRef.current.value = ''
+    }
+  }
 
   // Carrega URL autenticada ao selecionar arquivo
   const openFile = async (file) => {
@@ -97,6 +121,34 @@ export function MediaViewer() {
               <span>{label}</span>
             </button>
           ))}
+        </div>
+
+        {/* Upload Button */}
+        <div className="p-3 border-b border-slate-800">
+          <input
+            type="file"
+            multiple
+            accept="application/pdf,image/*"
+            ref={fileInputRef}
+            className="hidden"
+            onChange={handleUpload}
+          />
+          <button
+            disabled={!folderId || isUploading}
+            onClick={() => fileInputRef.current?.click()}
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs font-medium rounded-lg transition-colors"
+          >
+            {isUploading ? (
+              <>
+                <div className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin" />
+                Enviando...
+              </>
+            ) : (
+              <>
+                <span>📤</span> Enviar arquivo
+              </>
+            )}
+          </button>
         </div>
 
         {/* Lista de arquivos */}

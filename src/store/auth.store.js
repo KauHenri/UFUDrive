@@ -10,20 +10,24 @@ export const useAuthStore = create((set, get) => ({
   error: null,
 
   // Ações
-  signIn: async () => {
+  signIn: async (keepLoggedIn = false) => {
     set({ status: 'loading', error: null })
     try {
       await AuthService.initialize()
       await AuthService.requestToken('select_account')
       const userInfo = await AuthService.fetchUserInfo()
+      
+      if (keepLoggedIn) {
+        localStorage.setItem('ufudrive_keep_logged_in', 'true')
+      } else {
+        localStorage.removeItem('ufudrive_keep_logged_in')
+      }
+
       set({ user: userInfo })
 
-      // Bootstrap do Drive (pasta raiz + config.json)
-      // Feito aqui para centralizar o fluxo de inicialização
-      const { config, configFileId, appFolderId } =
-        await ConfigService.bootstrap(userInfo)
+      // Bootstrap do Drive
+      const { config, configFileId, appFolderId } = await ConfigService.bootstrap(userInfo)
 
-      // Injeta no config store (importado dinamicamente para evitar circular dep)
       const { useConfigStore } = await import('./config.store')
       useConfigStore.getState().setConfig(config, configFileId, appFolderId)
 
@@ -33,9 +37,35 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
+  attemptSilentLogin: async () => {
+    const keep = localStorage.getItem('ufudrive_keep_logged_in') === 'true'
+    if (!keep) return false
+
+    set({ status: 'loading', error: null })
+    try {
+      await AuthService.initialize()
+      // Tenta renovar sem consentimento
+      await AuthService.requestToken('')
+      const userInfo = await AuthService.fetchUserInfo()
+      set({ user: userInfo })
+
+      const { config, configFileId, appFolderId } = await ConfigService.bootstrap(userInfo)
+      const { useConfigStore } = await import('./config.store')
+      useConfigStore.getState().setConfig(config, configFileId, appFolderId)
+
+      set({ status: 'authenticated' })
+      return true
+    } catch (err) {
+      // Falhou o login silencioso
+      set({ status: 'idle', error: null })
+      localStorage.removeItem('ufudrive_keep_logged_in')
+      return false
+    }
+  },
+
   signOut: () => {
     AuthService.signOut()
-    // Limpa config store também
+    localStorage.removeItem('ufudrive_keep_logged_in')
     import('./config.store').then(({ useConfigStore }) => {
       useConfigStore.getState().reset()
     })
