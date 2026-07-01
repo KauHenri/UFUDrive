@@ -4,13 +4,14 @@ import { useParams, NavLink, Outlet, Navigate, useLocation, Link } from 'react-r
 import { useConfigStore } from '@/store/config.store'
 
 const MODULE_TABS = [
-  { key: 'notes',           label: 'Anotações',  icon: '📝', path: 'notes'   },
-  { key: 'media',           label: 'Slides',     icon: '📄', path: 'media'   },
-  { key: 'gradeCalculator', label: 'Notas',      icon: '📊', path: 'grades'  },
-  { key: 'kanban',          label: 'Kanban',     icon: '📋', path: 'kanban'  },
-  { key: 'flashcards',      label: 'Flashcards', icon: '🃏', path: 'flashcards' },
-  { key: 'codeEditor',      label: 'Código',     icon: '💻', path: 'code'    },
-  { key: 'externalFrame',   label: 'Externo',    icon: '🌐', path: 'external'},
+  { key: 'notes',           label: 'Anotações',  icon: '📝', path: 'notes'       },
+  { key: 'media',           label: 'Slides',     icon: '📄', path: 'media'       },
+  { key: 'gradeCalculator', label: 'Notas',      icon: '📊', path: 'grades'      },
+  { key: 'attendance',      label: 'Faltas',     icon: '📅', path: 'attendance'  },
+  { key: 'kanban',          label: 'Kanban',     icon: '📋', path: 'kanban'      },
+  { key: 'flashcards',      label: 'Flashcards', icon: '🃏', path: 'flashcards'  },
+  { key: 'codeEditor',      label: 'Código',     icon: '💻', path: 'code'        },
+  { key: 'quickLinks',      label: 'Links',      icon: '🔗', path: 'links'       },
 ]
 
 export function SubjectPage() {

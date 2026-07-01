@@ -5,21 +5,23 @@ import { useAuthStore } from '@/store/auth.store'
 import { useConfigStore } from '@/store/config.store'
 
 const NAV_MAIN = [
-  { to: '/app/dashboard', icon: '⬡', label: 'Dashboard' },
+  { to: '/app/dashboard', icon: '⧡',  label: 'Dashboard' },
   { to: '/app/subjects',  icon: '📚', label: 'Disciplinas' },
+  { to: '/app/schedule',  icon: '🗓️', label: 'Horário'    },
   { to: '/app/settings',  icon: '⚙️', label: 'Configurações' },
 ]
 
 // Primeira aba ativa de uma disciplina
 function getFirstTab(subject) {
   const tabMap = [
-    { key: 'notes',           path: 'notes'      },
-    { key: 'media',           path: 'media'      },
-    { key: 'gradeCalculator', path: 'grades'     },
-    { key: 'kanban',          path: 'kanban'     },
-    { key: 'flashcards',      path: 'flashcards' },
-    { key: 'codeEditor',      path: 'code'       },
-    { key: 'externalFrame',   path: 'external'   },
+    { key: 'notes',           path: 'notes'       },
+    { key: 'media',           path: 'media'       },
+    { key: 'gradeCalculator', path: 'grades'      },
+    { key: 'attendance',      path: 'attendance'  },
+    { key: 'kanban',          path: 'kanban'      },
+    { key: 'flashcards',      path: 'flashcards'  },
+    { key: 'codeEditor',      path: 'code'        },
+    { key: 'quickLinks',      path: 'links'       },
   ]
   const first = tabMap.find((t) => subject.enabledModules?.[t.key])
   return first ? first.path : 'grades'
